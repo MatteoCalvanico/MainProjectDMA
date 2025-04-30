@@ -3,17 +3,28 @@ import Fastify, {
   FastifyRequest,
   FastifyReply,
 } from "fastify";
-
-import { auth } from "./service/firebase";
+import { handler } from "./handler/authHandler";
 
 export function buildApp() {
   const fastify = Fastify({
     logger: true,
   }) as FastifyInstance;
 
-  // TODO: setup handler and controller
+  const authHandler = new handler();
 
-  fastify.get("/", (req: FastifyRequest, reply: FastifyReply) => null); // TODO: put handler method
+  fastify.post("/api/auth/logout", (req: FastifyRequest, reply: FastifyReply) =>
+    authHandler.logout(req, reply)
+  );
+
+  fastify.post("/api/auth/login", (req: FastifyRequest, reply: FastifyReply) =>
+    authHandler.login(req, reply)
+  );
+
+  fastify.post(
+    "/api/auth/register",
+    (req: FastifyRequest, reply: FastifyReply) =>
+      authHandler.register(req, reply)
+  );
 
   return fastify;
 }
