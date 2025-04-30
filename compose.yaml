@@ -37,7 +37,7 @@ services:
       dockerfile: Dockerfile
     container_name: auth
     environment:
-      - FIREBASE_API=
+      - FIREBASE_API=AIzaSyAnQtwTgkAHSDC4BFqfjVFyy__s_EOLDPU
     restart: unless-stopped
     networks:
       - shared_network # Connessione con Kong e altri service

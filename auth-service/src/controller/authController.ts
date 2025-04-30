@@ -1,5 +1,4 @@
 import {
-  auth,
   loginWithEmailAndPassword,
   registerWithEmailAndPassword,
   logoutUser,

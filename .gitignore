@@ -138,3 +138,8 @@ dist
 # RabbitMQ
 rabbitmq/data
 rabbitmq/logs
+
+# Jest
+cov
+
+.DS_Store
