@@ -4,6 +4,7 @@ import Fastify, {
   FastifyReply,
 } from "fastify";
 import { handler } from "./handler/authHandler";
+import { send } from "process";
 
 export function buildApp() {
   const fastify = Fastify({
@@ -11,6 +12,10 @@ export function buildApp() {
   }) as FastifyInstance;
 
   const authHandler = new handler();
+
+  fastify.get("/", (req: FastifyRequest, reply: FastifyReply) =>
+    reply.code(200).send({ success: true, message: "Service work!" })
+  );
 
   fastify.post("/logout", (req: FastifyRequest, reply: FastifyReply) =>
     authHandler.logout(req, reply)

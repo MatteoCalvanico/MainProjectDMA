@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 
 import {
   getAuth,
@@ -12,7 +11,7 @@ import {
 // Web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API,
+  apiKey: process.env.FIREBASE_API || "AIzaSyAnQtwTgkAHSDC4BFqfjVFyy__s_EOLDPU",
   authDomain: "dma-internship-project.firebaseapp.com",
   projectId: "dma-internship-project",
   storageBucket: "dma-internship-project.firebasestorage.app",
@@ -23,7 +22,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
 // Authentication functions
