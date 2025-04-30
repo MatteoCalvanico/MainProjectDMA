@@ -9,9 +9,11 @@ echo "Setting up RabbitMQ WebSocket Service in Kong..."
 # Delete routes and services for a fresh start
 echo "Removing any existing routes..."
 curl -s -X DELETE http://kong:8001/routes/rabbitmq-ws-route
+curl -s -X DELETE http://kong:8001/routes/auth
 sleep 1
 echo "Removing any existing services..."
 curl -s -X DELETE http://kong:8001/services/rabbitmq-ws
+curl -s -X DELETE http://kong:8001/routes/auth
 sleep 1
 
 ## INIT RabbitMQ config

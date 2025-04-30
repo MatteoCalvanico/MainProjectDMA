@@ -4,7 +4,6 @@ import Fastify, {
   FastifyReply,
 } from "fastify";
 import { handler } from "./handler/authHandler";
-import { send } from "process";
 
 export function buildApp() {
   const fastify = Fastify({

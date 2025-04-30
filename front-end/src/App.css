@@ -45,7 +45,7 @@ input::placeholder {
   padding: 10px;
   border-radius: 10px;
   background-color: rgba(120, 131, 155, 0.1);
-  width: 80%;
+  width: 100%;
   max-width: 500px;
 }
 
@@ -67,9 +67,9 @@ input::placeholder {
 
 .input-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  width: 80%;
+  width: 100%;
   max-width: 500px;
   margin-bottom: 10px;
 }
@@ -77,4 +77,69 @@ input::placeholder {
 h2 {
   color: rgb(88 196 220);
   margin-bottom: 30px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.error-message {
+  background-color: rgba(255, 107, 107, 0.2);
+  color: #ff6b6b;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+  font-size: calc(8px + 1vmin);
+}
+
+.button-container {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.toggle-form {
+  margin-top: 20px;
+  font-size: calc(8px + 1vmin);
+}
+
+.text-button {
+  background: none;
+  color: rgb(88, 196, 220);
+  margin-left: 5px;
+  padding: 0;
+  font-size: inherit;
+  cursor: pointer;
+  border: none;
+  text-decoration: underline;
+}
+
+.text-button:hover {
+  opacity: 0.8;
+}
+
+nav {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: calc(8px + 1vmin);
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: rgb(88, 196, 220);
 }
