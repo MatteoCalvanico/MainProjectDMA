@@ -131,8 +131,15 @@ services:
     depends_on:
       - kong
     volumes:
-      - ./kong-setup.sh:/kong-setup.sh
-    command: sh -c "apk add --no-cache curl && chmod +x /kong-setup.sh && sh /kong-setup.sh" #Aggiungiamo curl, mettiamo i permessi di esecuzione e facciamo partire lo script di inizializzazione
+      - ./kong-setup.sh:/tmp/kong-setup.sh:ro
+    command: |
+      /bin/sh -c "
+        apk add --no-cache curl dos2unix &&
+        cp /tmp/kong-setup.sh /kong-setup.sh &&
+        dos2unix /kong-setup.sh &&
+        chmod +x /kong-setup.sh &&
+        sh -x /kong-setup.sh
+      "
     networks:
       - frontend_network # Connessione con FE
       - shared_network # Connessione con i services (deve creare service e route)
