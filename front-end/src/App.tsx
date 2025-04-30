@@ -19,9 +19,9 @@ function App() {
     }
 
     // Configurazione per il broker RabbitMQ locale
-    const host = process.env.REACT_APP_MQTT_HOST || "localhost";
-    const port = process.env.REACT_APP_MQTT_PORT || "8000";
-    const path = process.env.REACT_APP_MQTT_PATH || "/mqtt-ws";
+    const host = import.meta.env.REACT_APP_MQTT_HOST || "localhost"; // 'import.meta.env.' è la sintassi di Vite
+    const port = import.meta.env.REACT_APP_MQTT_PORT || "8000";
+    const path = import.meta.env.REACT_APP_MQTT_PATH || "/mqtt-ws";
     const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
 
     const connectUrl = `ws://${host}:${port}${path}`;
@@ -32,8 +32,8 @@ function App() {
       clientId,
       clean: true,
       connectTimeout: 4000,
-      username: process.env.REACT_APP_RABBITMQ_USER || "guest",
-      password: process.env.REACT_APP_RABBITMQ_PASSWORD || "guest",
+      username: import.meta.env.REACT_APP_RABBITMQ_USER || "guest",
+      password: import.meta.env.REACT_APP_RABBITMQ_PASSWORD || "guest",
       reconnectPeriod: 1000,
     });
 

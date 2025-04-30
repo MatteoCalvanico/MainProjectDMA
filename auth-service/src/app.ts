@@ -12,18 +12,16 @@ export function buildApp() {
 
   const authHandler = new handler();
 
-  fastify.post("/api/auth/logout", (req: FastifyRequest, reply: FastifyReply) =>
+  fastify.post("/logout", (req: FastifyRequest, reply: FastifyReply) =>
     authHandler.logout(req, reply)
   );
 
-  fastify.post("/api/auth/login", (req: FastifyRequest, reply: FastifyReply) =>
+  fastify.post("/login", (req: FastifyRequest, reply: FastifyReply) =>
     authHandler.login(req, reply)
   );
 
-  fastify.post(
-    "/api/auth/register",
-    (req: FastifyRequest, reply: FastifyReply) =>
-      authHandler.register(req, reply)
+  fastify.post("/register", (req: FastifyRequest, reply: FastifyReply) =>
+    authHandler.register(req, reply)
   );
 
   return fastify;
