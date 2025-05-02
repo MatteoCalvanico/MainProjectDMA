@@ -3,6 +3,7 @@ import Fastify, {
   FastifyRequest,
   FastifyReply,
 } from "fastify";
+import cors from '@fastify/cors'
 import { handler } from "./handler/authHandler";
 
 export function buildApp() {
@@ -11,6 +12,16 @@ export function buildApp() {
   }) as FastifyInstance;
 
   const authHandler = new handler();
+
+  // Abilitiamo CORS
+  fastify.register(cors, {
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+    maxAge: 86400,
+  });
 
   fastify.get("/", (req: FastifyRequest, reply: FastifyReply) =>
     reply.code(200).send({ success: true, message: "Service work!" })
