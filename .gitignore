@@ -143,3 +143,5 @@ rabbitmq/logs
 cov
 
 .DS_Store
+
+.vscode

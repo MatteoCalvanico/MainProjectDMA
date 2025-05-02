@@ -89,7 +89,7 @@ const LoginPage = () => {
 
         <div className="button-container">
           <button type="submit" disabled={loading}>
-            {loading ? "Stiamo processando..." : isLogin ? "Login" : "Register"}
+            {loading ? "Processing..." : isLogin ? "Login" : "Register"}
           </button>
         </div>
       </form>
