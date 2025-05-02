@@ -1,6 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { controller } from "../controller/authController";
+import { createAccessToken } from "../service/firebase-admin";
 
 export class handler {
   private authController = new controller();
@@ -17,13 +18,15 @@ export class handler {
       const userCredential = await this.authController.login(email, password);
       const user = userCredential.user;
 
-      // Genera ID token (TODO: controllare per access token)
-      const token = await user.getIdToken();
+      // Genera ID token e Access token
+      const IDtoken = await user.getIdToken();
+      const accessToken = await createAccessToken(user.uid);
 
       reply.code(200).send({
         success: true,
         data: {
-          token,
+          IDtoken,
+          accessToken,
           uid: user.uid,
           email: user.email,
         },
@@ -58,13 +61,15 @@ export class handler {
       );
       const user = userCredential.user;
 
-      // Genera ID token (TODO: controllare per access token)
-      const token = await user.getIdToken();
+      // Genera ID token e Access token
+      const IDtoken = await user.getIdToken();
+      const accessToken = await createAccessToken(user.uid);
 
-      reply.code(201).send({
+      reply.code(200).send({
         success: true,
         data: {
-          token,
+          IDtoken,
+          accessToken,
           uid: user.uid,
           email: user.email,
         },

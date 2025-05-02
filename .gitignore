@@ -145,3 +145,5 @@ cov
 .DS_Store
 
 .vscode
+
+compose-var.env

@@ -37,7 +37,10 @@ services:
       dockerfile: Dockerfile
     container_name: auth
     environment:
-      - FIREBASE_API=AIzaSyAnQtwTgkAHSDC4BFqfjVFyy__s_EOLDPU
+      - FIREBASE_API=${FIREBASE_API}
+      - FIREBASE_PROJECT_ID=dma-internship-project
+      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
+      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
     restart: unless-stopped
     networks:
       - shared_network # Connessione con Kong e altri service
