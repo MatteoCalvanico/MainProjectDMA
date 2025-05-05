@@ -38,7 +38,7 @@ services:
     container_name: auth
     environment:
       - FIREBASE_API=${FIREBASE_API}
-      - FIREBASE_PROJECT_ID=dma-internship-project
+      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
       - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
       - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
     restart: unless-stopped
@@ -133,8 +133,12 @@ services:
     container_name: kong-setup
     depends_on:
       - kong
+    environment:
+    - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
+    - ISSUER=${FIREBASE_CLIENT_EMAIL}
     volumes:
       - ./kong-setup.sh:/tmp/kong-setup.sh:ro
+      - ./public_key.pem:/tmp/public_key.pem:ro
     command: |
       /bin/sh -c "
         apk add --no-cache curl dos2unix &&

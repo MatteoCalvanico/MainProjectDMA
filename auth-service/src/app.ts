@@ -3,7 +3,7 @@ import Fastify, {
   FastifyRequest,
   FastifyReply,
 } from "fastify";
-import cors from '@fastify/cors'
+import cors from "@fastify/cors";
 import { handler } from "./handler/authHandler";
 
 export function buildApp() {
@@ -23,7 +23,7 @@ export function buildApp() {
     maxAge: 86400,
   });
 
-  fastify.get("/", (req: FastifyRequest, reply: FastifyReply) =>
+  fastify.get("/auth/verify", (req: FastifyRequest, reply: FastifyReply) =>
     reply.code(200).send({ success: true, message: "Service work!" })
   );
 
@@ -31,11 +31,11 @@ export function buildApp() {
     authHandler.logout(req, reply)
   );
 
-  fastify.post("/login", (req: FastifyRequest, reply: FastifyReply) =>
+  fastify.post("/auth/login", (req: FastifyRequest, reply: FastifyReply) =>
     authHandler.login(req, reply)
   );
 
-  fastify.post("/register", (req: FastifyRequest, reply: FastifyReply) =>
+  fastify.post("/auth/register", (req: FastifyRequest, reply: FastifyReply) =>
     authHandler.register(req, reply)
   );
 

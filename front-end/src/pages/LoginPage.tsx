@@ -48,7 +48,7 @@ const LoginPage = () => {
       }
 
       // Save token to localStorage
-      localStorage.setItem("authToken", data.data.token);
+      localStorage.setItem("authToken", data.data.accessToken);
       localStorage.setItem("userId", data.data.uid);
 
       // Redirect to MQTT client
