@@ -17,13 +17,21 @@ function MqttClientPage() {
       return;
     }
 
+    // Get the access token
+    const accessToken = localStorage.getItem('authToken');
+    if (!accessToken) {
+      console.error("Access token is missing. Please login first.");
+      setConnectionStatus("Errore: Token di accesso mancante");
+      return;
+    }
+
     // Configurazione per il broker RabbitMQ locale
     const host = import.meta.env.REACT_APP_MQTT_HOST || "localhost";
     const port = import.meta.env.REACT_APP_MQTT_PORT || "8000";
     const path = import.meta.env.REACT_APP_MQTT_PATH || "/mqtt-ws";
     const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
 
-    const connectUrl = `ws://${host}:${port}${path}`;
+    const connectUrl = `ws://${host}:${port}${path}?jwt=${accessToken}`; // Passiamo il token direttamente via query perchè Mqtt.js non supporta il passaggio di dati via header
 
     setConnectionStatus("Connessione in corso...");
 
@@ -43,7 +51,7 @@ function MqttClientPage() {
     });
 
     client.on("error", (err) => {
-      console.log("Connection error: ", err);
+      console.error("Connection error: ", err);
       setConnectionStatus("Errore di connessione: " + err.message);
       setIsConnected(false);
       if (client) client.end();
