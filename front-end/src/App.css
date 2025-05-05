@@ -29,6 +29,7 @@ input {
   padding: 20px;
   margin-bottom: 10px;
   border-radius: 20px;
+  width: 90%;
   background-color: rgba(120, 131, 155, 0.2);
   border: none;
   color: white;
