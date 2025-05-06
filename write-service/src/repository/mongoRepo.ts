@@ -18,22 +18,4 @@ export class mongoRepo {
 
     await newSeries.save();
   }
-
-  async findSeries(param?: object) {
-    console.log("Searching...");
-    if (param == null) {
-      const results = await MessageSeries.find({});
-      console.log("Find");
-      return results;
-    }
-    const results = await MessageSeries.find(param);
-    return results;
-  }
-
-  async findSeriesByTimestamp(stamp: string) {
-    console.log("Searching...");
-    const results = await MessageSeries.find({ timestamp: stamp });
-    console.log("Find");
-    return results;
-  }
 }

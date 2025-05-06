@@ -5,10 +5,9 @@ import { MessageSeries } from "../model/messageSchema";
 // Mock mongoose e schema
 jest.mock("mongoose");
 jest.mock("../model/messageSchema", () => ({
-  MessageSeries: {
-    find: jest.fn(),
-    save: jest.fn(),
-  },
+  MessageSeries: jest.fn().mockImplementation(() => ({
+    save: jest.fn().mockResolvedValue({}),
+  })),
 }));
 
 describe("MongoRepository tests:", () => {
@@ -19,29 +18,88 @@ describe("MongoRepository tests:", () => {
     repository = new mongoRepo();
   });
 
-  describe("MessageSeries:", () => {
-    test("should find all message series when no parameters are provided", async () => {
-      const mockSeries = [{ metadata: { topic: "test", payload: "data" } }];
-      (MessageSeries.find as jest.Mock).mockResolvedValue(mockSeries); // Facciamo ritornare dal .find i nosti dati finti
-
-      const result = await repository.findSeries();
-
-      expect(MessageSeries.find).toHaveBeenCalledWith({});
-      expect(result).toEqual(mockSeries);
+  describe("saveSeries", () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
     });
 
-    test("should find messages by timestamp", async () => {
-      const mockMessages = [{ timestamp: "2023-01-01T00:00:00Z" }];
-      (MessageSeries.find as jest.Mock).mockResolvedValue(mockMessages); // Facciamo ritornare dal .find i nosti dati finti
+    test("should correctly save series with parsed user data", async () => {
+      // Arrange
+      const topic = "projectOneData";
+      const userId = "user123";
+      const message = "test message";
+      const payload = `${userId}|${message}`;
 
-      const result = await repository.findSeriesByTimestamp(
-        "2023-01-01T00:00:00Z"
-      );
+      const mockSaveMethod = jest.fn().mockResolvedValue({});
+      (MessageSeries as unknown as jest.Mock).mockImplementation(() => ({
+        save: mockSaveMethod,
+      }));
 
-      expect(MessageSeries.find).toHaveBeenCalledWith({
-        timestamp: "2023-01-01T00:00:00Z",
+      // Act
+      await repository.saveSeries({ topic, payload });
+
+      // Assert
+      expect(MessageSeries).toHaveBeenCalledWith({
+        metadata: {
+          topic: "projectOneData",
+          payload: "test message",
+          userId: "user123",
+        },
       });
-      expect(result).toEqual(mockMessages);
+
+      expect(mockSaveMethod).toHaveBeenCalled();
+    });
+
+    test("should handle empty message part", async () => {
+      // Arrange
+      const topic = "projectOneData";
+      const userId = "user123";
+      const payload = `${userId}|`;
+
+      const mockSaveMethod = jest.fn().mockResolvedValue({});
+      (MessageSeries as unknown as jest.Mock).mockImplementation(() => ({
+        save: mockSaveMethod,
+      }));
+
+      // Act
+      await repository.saveSeries({ topic, payload });
+
+      // Assert
+      expect(MessageSeries).toHaveBeenCalledWith({
+        metadata: {
+          topic: "projectOneData",
+          payload: "",
+          userId: "user123",
+        },
+      });
+
+      expect(mockSaveMethod).toHaveBeenCalled();
+    });
+
+    test("should handle empty userId part", async () => {
+      // Arrange
+      const topic = "projectOneData";
+      const message = "test message";
+      const payload = `|${message}`;
+
+      const mockSaveMethod = jest.fn().mockResolvedValue({});
+      (MessageSeries as unknown as jest.Mock).mockImplementation(() => ({
+        save: mockSaveMethod,
+      }));
+
+      // Act
+      await repository.saveSeries({ topic, payload });
+
+      // Assert
+      expect(MessageSeries).toHaveBeenCalledWith({
+        metadata: {
+          topic: "projectOneData",
+          payload: "test message",
+          userId: "",
+        },
+      });
+
+      expect(mockSaveMethod).toHaveBeenCalled();
     });
   });
 });
