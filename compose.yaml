@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     networks:
       - write_network # Connessione con il service che scrive
-      - user_network # Connessione con il service di lettura dati degli user
+      - user_network # Connessione con il service di lettura/scrittura dati degli user
       - retrive_network # Connessione con il service di lettura dei messaggi
 
   write:
