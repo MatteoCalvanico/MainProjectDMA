@@ -1,18 +1,11 @@
 import mongoose from "mongoose";
 
-// Definizione dello schema per i dati utente
-const userSchema = new mongoose.Schema();
-/*{
-    timestamp: { type: Date, default: Date.now },
-    metadata: { topic: String, payload: String, userId: String },
-  },
-  {
-    timeseries: {
-      timeField: "timestamp",
-      metaField: "metadata",
-      granularity: "seconds",
-    },
-  }*/
+// Definizione dello schema per i dati degi Users
+const userSchema = new mongoose.Schema({
+  registerDate: { type: Date, default: Date.now },
+  userId: String,
+  email: String,
+});
 
 // Export del modello
 export const Users = mongoose.model("Users", userSchema);
