@@ -13,7 +13,7 @@ export class controller {
     userId,
     email,
   }: {
-    registerDate: string;
+    registerDate: string | undefined;
     userId: string;
     email: string;
   }) {

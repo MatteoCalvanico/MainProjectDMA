@@ -13,9 +13,12 @@ export class handler {
   async save(request: FastifyRequest, reply: FastifyReply) {
     try {
       const userSchema = z.object({
-        registerDate: z.string().datetime({
-          message: "registerDate must be a valid ISO datetime format",
-        }),
+        registerDate: z
+          .string()
+          .datetime({
+            message: "registerDate must be a valid ISO datetime format",
+          })
+          .optional(),
         userId: z.string({
           required_error: "userId is required",
           invalid_type_error: "userId must be a string",
@@ -31,7 +34,10 @@ export class handler {
       });
 
       const userData = userSchema.parse(request.body);
-      await this.controller.save(userData);
+      await this.controller.save({
+        ...userData,
+        registerDate: userData.registerDate || new Date().toISOString(), // Se non viene inserita nel body mettiamo la data e ora attuali
+      });
       reply.code(200).send({ success: true });
     } catch (error: any) {
       reply.code(500).send({ success: false, error: error.message });
