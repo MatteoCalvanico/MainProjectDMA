@@ -4,6 +4,7 @@ import "./App.css";
 import MqttPage from "./pages/MqttClient";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import MessagesPage from "./pages/MessagesPage";
 
 function App() {
   const isLoggedIn = localStorage.getItem("authToken") !== null;
@@ -13,6 +14,7 @@ function App() {
       <div className="App">
         <nav>
           <Link to="/client">MQTT Client</Link>
+          <Link to="/msg">Messages</Link>
           {isLoggedIn && (
             <button 
               onClick={() => {
@@ -33,6 +35,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <MqttPage />
+                <MessagesPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/msg" 
+            element={
+              <ProtectedRoute>
+                <MessagesPage />
               </ProtectedRoute>
             } 
           />
