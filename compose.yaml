@@ -12,6 +12,28 @@ services:
       - user_network # Connessione con il service di lettura dati degli user
       - retrive_network # Connessione con il service di lettura dei messaggi
 
+  write:
+    build:
+      context: ./write-service
+      dockerfile: Dockerfile
+    container_name: write
+    depends_on:
+      - mongodb
+      - rabbitmq
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/projectOne
+      - AMQP_HOST=rabbitmq
+      - AMQP_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    restart: unless-stopped
+    networks:
+      - broker_network # Connessione con RabbitMQ
+      - write_network # COnnessione con MongoDB
+    volumes: # Necessari per permettere il 'hot-reload'
+      - ./write-service:/usr/src/write # 'Linkiamo' il codice, ogni modifica fatta viene trasmessa al container subito
+      - /usr/src/auth/node_modules # Rimuoviamo la cartella dei moduli che verrà creata solo al build iniziale
+
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -30,6 +52,7 @@ services:
     restart: unless-stopped
     networks:
       - shared_network # Connessione con Kong e altri services
+      - broker_network # Connessione con il service che scrive
 
   auth:
     build:
