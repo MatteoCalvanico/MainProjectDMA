@@ -3,4 +3,5 @@ export enum ParamType {
   Stamp,
   Id,
   Email,
+  null,
 }
