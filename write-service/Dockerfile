@@ -6,6 +6,5 @@ COPY package*.json ./
 RUN npm i
 COPY . .
 
-# Porta per il reader e fa partire il tutto
-EXPOSE 8080
+# Fa partire il tutto
 CMD npm run dev
