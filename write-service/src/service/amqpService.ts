@@ -42,7 +42,8 @@ export class amqpService {
     this.channel.consume(this.queue, async (msg) => {
       if (msg !== null) {
         console.log("Received message on topic:", this.routingKey);
-        console.log("Message content:", msg.content.toString());
+        console.log("Message sender:", msg.content.toString().split("|")[0]);
+        console.log("Message content:", msg.content.toString().split("|")[1]);
         await this.mongo.saveSeries({
           topic: this.routingKey,
           payload: msg.content.toString(),

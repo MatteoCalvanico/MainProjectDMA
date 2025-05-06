@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const messageSchemaSeries = new mongoose.Schema(
   {
     timestamp: { type: Date, default: Date.now },
-    metadata: { topic: String, payload: String },
+    metadata: { topic: String, payload: String, userId: String },
   },
   {
     timeseries: {

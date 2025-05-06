@@ -87,7 +87,7 @@ function MqttClientPage() {
     // Pubblica il messaggio
     client.publish(
       "projectOneData",
-      message.trim() || "messaggio predefinito",
+      localStorage.getItem("userId") + "|" + (message.trim() || "messaggio predefinito"), // message will be: "userId|content"
       { qos: 2, retain: false },
       (error) => {
         if (error) {

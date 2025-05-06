@@ -10,8 +10,10 @@ export class mongoRepo {
   }
 
   async saveSeries({ topic, payload }: { topic: string; payload: string }) {
+    const parts = payload.split("|"); // Split userId and message
+
     const newSeries = new MessageSeries({
-      metadata: { topic, payload },
+      metadata: { topic, payload: parts[1], userId: parts[0] },
     });
 
     await newSeries.save();
