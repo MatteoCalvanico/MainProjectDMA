@@ -86,6 +86,21 @@ services:
       - ./retrive-service:/usr/src/retrive # 'Linkiamo' il codice, ogni modifica fatta viene trasmessa al container subito
       - /usr/src/retrive/node_modules # Rimuoviamo la cartella dei moduli che verrà creata solo al build iniziale
 
+  user:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/projectOne
+    restart: unless-stopped
+    networks:
+      - user_network # Connessione con MongoDB
+      - shared_network # Connessione con Kong e altri service
+    volumes: # Necessari per permettere il 'hot-reload'
+      - ./user-service:/usr/src/user # 'Linkiamo' il codice, ogni modifica fatta viene trasmessa al container subito
+      - /usr/src/user/node_modules # Rimuoviamo la cartella dei moduli che verrà creata solo al build iniziale
+
   frontend:
     build:
       context: ./front-end
