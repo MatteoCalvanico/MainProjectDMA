@@ -60,10 +60,11 @@ export class handler {
         password
       );
       const user = userCredential.user;
+      const userId = user.uid;
 
       // Genera ID token e Access token
       const IDtoken = await user.getIdToken();
-      const accessToken = await createAccessToken(user.uid);
+      const accessToken = await createAccessToken(userId);
 
       reply.code(200).send({
         success: true,
@@ -73,6 +74,15 @@ export class handler {
           uid: user.uid,
           email: user.email,
         },
+      });
+
+      // Aggiunta info in MongoDB
+      await fetch(`http://user:8100/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, userId }),
       });
     } catch (error: any) {
       reply.code(error.code === "auth/email-already-in-use" ? 409 : 500).send({
