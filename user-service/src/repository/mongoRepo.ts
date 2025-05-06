@@ -18,13 +18,23 @@ export class mongoRepo {
     userId: string;
     email: string;
   }) {
-    const newUser = new User({
-      registerDate: registerDate,
-      userId: userId,
-      email: email,
-    });
+    // Controlliamo se già esiste un utente con quell'id, in caso affemativo non lo aggiungiamo
+    const existingUser = await User.findOne({ userId: userId });
+    if (!existingUser) {
+      const newUser = new User({
+        registerDate: registerDate,
+        userId: userId,
+        email: email,
+      });
 
-    await newUser.save();
+      await newUser.save();
+      return { success: true, message: "User created successfully" };
+    } else {
+      return {
+        success: false,
+        message: "User with this userId already exists",
+      };
+    }
   }
 
   private async find(param?: any) {
@@ -44,14 +54,14 @@ export class mongoRepo {
   }
 
   async findByRegisterDate(stamp: string) {
-    return this.find(stamp);
+    return this.find({ registerDate: stamp });
   }
 
   async findByUserId(userId: string) {
-    return this.find(userId);
+    return this.find({ userId: userId });
   }
 
   async findByEmail(email: string) {
-    return this.find(email);
+    return this.find({ email: email });
   }
 }

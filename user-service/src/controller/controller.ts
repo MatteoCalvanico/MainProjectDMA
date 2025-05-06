@@ -17,7 +17,7 @@ export class controller {
     userId: string;
     email: string;
   }) {
-    this.mongo.save({ registerDate, userId, email });
+    return await this.mongo.save({ registerDate, userId, email });
   }
 
   async find(param: string | null, type: ParamType) {

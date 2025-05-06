@@ -34,11 +34,16 @@ export class handler {
       });
 
       const userData = userSchema.parse(request.body);
-      await this.controller.save({
+      const result = await this.controller.save({
         ...userData,
-        registerDate: userData.registerDate || new Date().toISOString(), // Se non viene inserita nel body mettiamo la data e ora attuali
+        registerDate: userData.registerDate || new Date().toISOString(),
       });
-      reply.code(200).send({ success: true });
+
+      if (result.success) {
+        reply.code(200).send({ success: true, message: result.message });
+      } else {
+        reply.code(400).send({ success: false, message: result.message });
+      }
     } catch (error: any) {
       reply.code(500).send({ success: false, error: error.message });
     }
