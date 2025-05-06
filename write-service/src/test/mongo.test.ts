@@ -24,7 +24,6 @@ describe("MongoRepository tests:", () => {
     });
 
     test("should correctly save series with parsed user data", async () => {
-      // Arrange
       const topic = "projectOneData";
       const userId = "user123";
       const message = "test message";
@@ -35,10 +34,8 @@ describe("MongoRepository tests:", () => {
         save: mockSaveMethod,
       }));
 
-      // Act
       await repository.saveSeries({ topic, payload });
 
-      // Assert
       expect(MessageSeries).toHaveBeenCalledWith({
         metadata: {
           topic: "projectOneData",
@@ -51,7 +48,6 @@ describe("MongoRepository tests:", () => {
     });
 
     test("should handle empty message part", async () => {
-      // Arrange
       const topic = "projectOneData";
       const userId = "user123";
       const payload = `${userId}|`;
@@ -61,10 +57,8 @@ describe("MongoRepository tests:", () => {
         save: mockSaveMethod,
       }));
 
-      // Act
       await repository.saveSeries({ topic, payload });
 
-      // Assert
       expect(MessageSeries).toHaveBeenCalledWith({
         metadata: {
           topic: "projectOneData",
@@ -77,7 +71,6 @@ describe("MongoRepository tests:", () => {
     });
 
     test("should handle empty userId part", async () => {
-      // Arrange
       const topic = "projectOneData";
       const message = "test message";
       const payload = `|${message}`;
@@ -87,10 +80,8 @@ describe("MongoRepository tests:", () => {
         save: mockSaveMethod,
       }));
 
-      // Act
       await repository.saveSeries({ topic, payload });
 
-      // Assert
       expect(MessageSeries).toHaveBeenCalledWith({
         metadata: {
           topic: "projectOneData",
