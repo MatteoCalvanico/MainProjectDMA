@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { mongoRepo } from "../repository/mongoRepo";
-import { Users } from "../model/userSchema";
+import { User } from "../model/userSchema";
 
 // Mock mongoose e schema
 jest.mock("mongoose");
