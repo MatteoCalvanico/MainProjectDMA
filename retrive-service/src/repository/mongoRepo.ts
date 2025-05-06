@@ -9,16 +9,6 @@ export class mongoRepo {
     );
   }
 
-  async saveSeries({ topic, payload }: { topic: string; payload: string }) {
-    const parts = payload.split("|"); // Split userId and message
-
-    const newSeries = new MessageSeries({
-      metadata: { topic, payload: parts[1], userId: parts[0] },
-    });
-
-    await newSeries.save();
-  }
-
   async findSeries(param?: object) {
     console.log("Searching...");
     if (param == null) {
@@ -33,6 +23,13 @@ export class mongoRepo {
   async findSeriesByTimestamp(stamp: string) {
     console.log("Searching...");
     const results = await MessageSeries.find({ timestamp: stamp });
+    console.log("Find");
+    return results;
+  }
+
+  async findSeriesByUserId(userId: string) {
+    console.log("Searching...");
+    const results = await MessageSeries.find({ "metadata.userId": userId });
     console.log("Find");
     return results;
   }

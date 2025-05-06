@@ -7,7 +7,6 @@ jest.mock("mongoose");
 jest.mock("../model/messageSchema", () => ({
   MessageSeries: {
     find: jest.fn(),
-    save: jest.fn(),
   },
 }));
 
@@ -40,6 +39,20 @@ describe("MongoRepository tests:", () => {
 
       expect(MessageSeries.find).toHaveBeenCalledWith({
         timestamp: "2023-01-01T00:00:00Z",
+      });
+      expect(result).toEqual(mockMessages);
+    });
+
+    test("should find messages by userId", async () => {
+      const mockMessages = [{ userId: "VYnv0pffOoPbMUpVHd06GWbyMYm1" }];
+      (MessageSeries.find as jest.Mock).mockResolvedValue(mockMessages); // Facciamo ritornare dal .find i nosti dati finti
+
+      const result = await repository.findSeriesByUserId(
+        "VYnv0pffOoPbMUpVHd06GWbyMYm1"
+      );
+
+      expect(MessageSeries.find).toHaveBeenCalledWith({
+        "metadata.userId": "VYnv0pffOoPbMUpVHd06GWbyMYm1",
       });
       expect(result).toEqual(mockMessages);
     });
