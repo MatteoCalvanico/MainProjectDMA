@@ -20,6 +20,35 @@ export function buildApp() {
   // Inizializzazione controller
   const h = new handler(new controller(db));
 
+  fastify.get("/user/verify", (req: FastifyRequest, reply: FastifyReply) =>
+    reply.code(200).send({ success: true, message: "Service work!" })
+  );
+
+  // Rotta per prendere tutti gli utenti
+  fastify.get("/", (req: FastifyRequest, reply: FastifyReply) =>
+    h.find(req, reply)
+  );
+
+  // Rotta per cercare utenti per data di registrazione
+  fastify.get("/stamp/:timestamp", (req: FastifyRequest, reply: FastifyReply) =>
+    h.find(req, reply)
+  );
+
+  // Rotta per cercare utenti per userId
+  fastify.get("/id/:userId", (req: FastifyRequest, reply: FastifyReply) =>
+    h.find(req, reply)
+  );
+
+  // Rotta per cercare utenti per email
+  fastify.get("/email/:email", (req: FastifyRequest, reply: FastifyReply) =>
+    h.find(req, reply)
+  );
+
+  // Rotta per aggiungere nuovi utenti
+  fastify.post("/add", (req: FastifyRequest, reply: FastifyReply) =>
+    h.save(req, reply)
+  );
+
   return fastify;
 }
 

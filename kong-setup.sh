@@ -11,12 +11,15 @@ echo "Removing any existing routes..."
 curl -s -X DELETE http://kong:8001/routes/rabbitmq-ws-route
 curl -s -X DELETE http://kong:8001/routes/auth
 curl -s -X DELETE http://kong:8001/routes/retrive
+curl -s -X DELETE http://kong:8001/routes/user
 curl -s -X DELETE http://kong:8001/routes/auth-login-route
 curl -s -X DELETE http://kong:8001/routes/auth-register-route
 curl -s -X DELETE http://kong:8001/routes/auth-verify-route
 curl -s -X DELETE http://kong:8001/routes/auth-protected-route
 curl -s -X DELETE http://kong:8001/routes/retrive-verify-route
 curl -s -X DELETE http://kong:8001/routes/retrive-protected-route
+curl -s -X DELETE http://kong:8001/routes/user-verify-route
+curl -s -X DELETE http://kong:8001/routes/user-protected-route
 sleep 1
 echo "Removing any existing services..."
 curl -s -X DELETE http://kong:8001/services/rabbitmq-ws
@@ -82,10 +85,15 @@ curl -i -X POST http://kong:8001/services \
   --data name=auth \
   --data url=http://auth:8080
 # Retrive endopoints
-echo "...for auth-service"
+echo "...for retrive-service"
 curl -i -X POST http://kong:8001/services \
   --data name=retrive \
   --data url=http://retrive:8090
+# User endopoints
+echo "...for user-service"
+curl -i -X POST http://kong:8001/services \
+  --data name=user \
+  --data url=http://user:8100
 
 
 # Add routes
@@ -136,13 +144,33 @@ curl -i -X POST http://kong:8001/services/retrive/routes \
   --data "protocols[]=https" \
   --data "name=retrive-protected-route"
 
+echo "...for user-service"
+# Create unprotected routes for authentication endpoints
+echo "Creating unprotected routes verify..."
+curl -i -X POST http://kong:8001/services/user/routes \
+  --data "paths[]=/user/verify" \
+  --data "protocols[]=http" \
+  --data "protocols[]=https" \
+  --data "strip_path=false" \
+  --data "name=user-verify-route"
+# Create a route for all other auth endpoints
+echo "Creating protected routes for all other user endpoints..."
+curl -i -X POST http://kong:8001/services/user/routes \
+  --data "paths[]=/user" \
+  --data "protocols[]=http" \
+  --data "protocols[]=https" \
+  --data "name=user-protected-route"
+
 
 # Apply JWT plugin only to the protected route
 echo "Protecting auth routes with JWT authentication..."
 curl -X POST http://kong:8001/routes/auth-protected-route/plugins \
   --data "name=jwt"
-  echo "Protecting retrive routes with JWT authentication..."
+echo "Protecting retrive routes with JWT authentication..."
 curl -X POST http://kong:8001/routes/retrive-protected-route/plugins \
+  --data "name=jwt"
+echo "Protecting user routes with JWT authentication..."
+curl -X POST http://kong:8001/routes/user-protected-route/plugins \
   --data "name=jwt"
 ## FINISH Back-end Endpoints config
 
