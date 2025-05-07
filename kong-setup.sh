@@ -168,10 +168,12 @@ curl -X POST http://kong:8001/routes/auth-protected-route/plugins \
   --data "name=jwt"
 echo "Protecting retrive routes with JWT authentication..."
 curl -X POST http://kong:8001/routes/retrive-protected-route/plugins \
-  --data "name=jwt"
+  --data "name=jwt" \
+  --data "config.run_on_preflight=false"
 echo "Protecting user routes with JWT authentication..."
 curl -X POST http://kong:8001/routes/user-protected-route/plugins \
-  --data "name=jwt"
+  --data "name=jwt" \
+  --data "config.run_on_preflight=false"
 ## FINISH Back-end Endpoints config
 
 
