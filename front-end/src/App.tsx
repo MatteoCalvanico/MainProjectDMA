@@ -24,7 +24,6 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <MqttPage />
-              <MessagesPage />
             </ProtectedRoute>
           }
         />
