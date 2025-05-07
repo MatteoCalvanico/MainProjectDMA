@@ -3,6 +3,7 @@ import Fastify, {
   FastifyRequest,
   FastifyReply,
 } from "fastify";
+import cors from "@fastify/cors";
 import { mongoRepo } from "./repository/mongoRepo";
 import { handler } from "./handlers/handler";
 import { controller } from "./controller/controller";
@@ -19,6 +20,15 @@ export function buildApp() {
 
   // Inizializzazione controller
   const h = new handler(new controller(db));
+
+  // Abilitiamo CORS
+  fastify.register(cors, {
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Authorization", "Content-Type"],
+    exposedHeaders: ["Authorization"],
+    maxAge: 86400,
+  });
 
   fastify.get("/retrive/verify", (req: FastifyRequest, reply: FastifyReply) =>
     reply.code(200).send({ success: true, message: "Service work!" })
