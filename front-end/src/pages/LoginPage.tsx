@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 
 const LoginPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLoginForm, setIsLoginForm] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAppContext(); // Prendiamo la funzione di login dall'AppContext
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,22 +17,19 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      // Validate input
+      // Validazioni varie
       if (!email || !password) {
         throw new Error("Compila tutti i campi");
       }
-
       if (password.length < 6) {
         throw new Error("La password deve avere almeno 6 caratteri");
       }
-
-      // Email validation
       if (!/\S+@\S+\.\S+/.test(email)) {
         throw new Error("inserisci un'email valida");
       }
 
-      // Determine endpoint based on action
-      const endpoint = isLogin ? "/login" : "/register";
+      // Scegliamo endpoint in base al flag
+      const endpoint = isLoginForm ? "/login" : "/register";
 
       // Call the API
       const response = await fetch(`http://localhost:8000/auth${endpoint}`, {
@@ -47,11 +46,10 @@ const LoginPage = () => {
         throw new Error(data.error || "Authentication failed");
       }
 
-      // Save token to localStorage
-      localStorage.setItem("authToken", data.data.accessToken);
-      localStorage.setItem("userId", data.data.uid);
+      // Funzione di login (presa da AppContext, guarda sopra)
+      login(data.data.accessToken, data.data.uid);
 
-      // Redirect to MQTT client
+      // Redirect
       navigate("/client");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -62,7 +60,7 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <h2>{isLogin ? "Login" : "Register"}</h2>
+      <h2>{isLoginForm ? "Login" : "Register"}</h2>
 
       {error && <div className="error-message">{error}</div>}
 
@@ -89,20 +87,20 @@ const LoginPage = () => {
 
         <div className="button-container">
           <button type="submit" disabled={loading}>
-            {loading ? "Processing..." : isLogin ? "Login" : "Register"}
+            {loading ? "Processing..." : isLoginForm ? "Login" : "Register"}
           </button>
         </div>
       </form>
 
       <div className="toggle-form">
         <p>
-          {isLogin ? "Non hai un account?" : "hai già un account?"}
+          {isLoginForm ? "Non hai un account?" : "hai già un account?"}
           <button
             className="text-button"
-            onClick={() => setIsLogin(!isLogin)}
+            onClick={() => setIsLoginForm(!isLoginForm)} // Modifichiamo il flag usando l'useState
             disabled={loading}
           >
-            {isLogin ? "Register" : "Login"}
+            {isLoginForm ? "Register" : "Login"}
           </button>
         </p>
       </div>
