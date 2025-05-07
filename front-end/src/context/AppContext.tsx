@@ -4,6 +4,7 @@ import mqtt, { MqttClient } from "mqtt";
 interface AppContextType {
   isLoggedIn: boolean;
   isConnected: boolean;
+  authLoading: boolean;
   connectionStatus: string;
   client: MqttClient | null;
   login: (token: string, userId: string) => void;
@@ -23,6 +24,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
   const [client, setClient] = useState<MqttClient | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState("Disconnesso");
+  const [authLoading, setAuthLoading] = useState(true);
 
   // Controllo se già loggato
   useEffect(() => {
@@ -30,6 +32,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     if (token) {
       setIsLoggedIn(true);
     }
+    setAuthLoading(false);
   }, []);
 
   const login = (token: string, userId: string) => {
@@ -125,6 +128,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     <AppContext.Provider
       value={{
         isLoggedIn,
+        authLoading,
         isConnected,
         connectionStatus,
         client,
