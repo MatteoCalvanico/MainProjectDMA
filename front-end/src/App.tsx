@@ -6,6 +6,16 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import { AppProvider, useAppContext } from "./context/AppContext";
 import "./App.css";
 
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#58c4dc",
+    },
+  },
+});
+
 function AppContent() {
   const { isLoggedIn, logout } = useAppContext(); // Prendiamo flag e metodo da AppContext
 
@@ -42,11 +52,13 @@ function AppContent() {
 
 function App() {
   return (
-    <AppProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
-    </AppProvider>
+    <ThemeProvider theme={theme}>
+      <AppProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </AppProvider>
+    </ThemeProvider>
   );
 }
 

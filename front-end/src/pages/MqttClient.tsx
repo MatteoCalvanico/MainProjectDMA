@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useAppContext } from "../context/AppContext";
 
+import Button from "@mui/material/Button";
+import SendIcon from "@mui/icons-material/Send";
+import Stack from "@mui/material/Stack";
+
 function MqttClientPage() {
   const [message, setMessage] = useState("");
   const [messageStatus, setMessageStatus] = useState("");
@@ -47,15 +51,25 @@ function MqttClientPage() {
         </p>
         {messageStatus && <p className="message-status">{messageStatus}</p>}
       </div>
-      <div className="input-container">
+      <Stack direction="row" spacing={3}>
         <input
           type="text"
           placeholder="Testo da inviare..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button onClick={sendData}>Invia</button>
-      </div>
+        <Button
+          onClick={sendData}
+          color="primary"
+          endIcon={<SendIcon />}
+          sx={{
+            borderRadius: "28px",
+            minWidth: "80px",
+          }}
+        >
+          Invia
+        </Button>
+      </Stack>
       <div>
         <button onClick={connect} disabled={isConnected}>
           Connettiti
