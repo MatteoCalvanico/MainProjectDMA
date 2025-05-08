@@ -70,7 +70,7 @@ function MqttClientPage() {
           Invia
         </Button>
       </Stack>
-      <div>
+      <div className="button-container">
         <button onClick={connect} disabled={isConnected}>
           Connettiti
         </button>

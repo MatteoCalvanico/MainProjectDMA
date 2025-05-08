@@ -66,13 +66,8 @@ input::placeholder {
   font-size: calc(8px + 1vmin);
 }
 
-.input-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  max-width: 500px;
-  margin-bottom: 10px;
+.button-container {
+  margin-top: 10px;
 }
 
 h2 {
