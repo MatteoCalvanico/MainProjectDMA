@@ -1,5 +1,15 @@
 import { handler } from "../handler/authHandler";
 import { controller } from "../controller/authController";
+import { AdminService } from "../service/firebase-admin";
+
+// Mock Firebase Admin Service
+jest.mock("../service/firebase-admin", () => ({
+  AdminService: {
+    getInstance: jest.fn().mockReturnValue({
+      createAccessToken: jest.fn().mockResolvedValue("mocked-access-token"),
+    }),
+  },
+}));
 
 // Mock controller
 jest.mock("../controller/authController", () => ({
@@ -25,6 +35,11 @@ jest.mock("../controller/authController", () => ({
     logout: jest.fn().mockResolvedValue(undefined),
   })),
 }));
+
+// Mock fetch for user service call
+global.fetch = jest.fn().mockResolvedValue({
+  json: jest.fn().mockResolvedValue({ success: true }),
+});
 
 describe("AuthHandler tests:", () => {
   let authHandler: handler;
@@ -66,7 +81,8 @@ describe("AuthHandler tests:", () => {
       expect(res.send).toHaveBeenCalledWith({
         success: true,
         data: {
-          token: "mocked-id-token",
+          IDtoken: "mocked-id-token",
+          accessToken: "mocked-access-token",
           uid: "test-uid-123",
           email: "test@example.com",
         },
@@ -131,7 +147,7 @@ describe("AuthHandler tests:", () => {
   });
 
   describe("register", () => {
-    test("should return 201 with user data when registration is successful", async () => {
+    test("should return 200 with user data when registration is successful", async () => {
       const req = mockRequest({
         email: "test@example.com",
         password: "password123",
@@ -144,15 +160,17 @@ describe("AuthHandler tests:", () => {
         "test@example.com",
         "password123"
       );
-      expect(res.code).toHaveBeenCalledWith(201);
+      expect(res.code).toHaveBeenCalledWith(200);
       expect(res.send).toHaveBeenCalledWith({
         success: true,
         data: {
-          token: "mocked-id-token",
+          IDtoken: "mocked-id-token",
+          accessToken: "mocked-access-token",
           uid: "test-uid-123",
           email: "test@example.com",
         },
       });
+      expect(fetch).toHaveBeenCalled();
     });
 
     test("should return 409 when email is already in use", async () => {

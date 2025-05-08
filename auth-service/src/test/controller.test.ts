@@ -1,16 +1,10 @@
 import { controller } from "../controller/authController";
-import {
-  auth,
-  registerWithEmailAndPassword,
-  loginWithEmailAndPassword,
-  logoutUser,
-} from "../service/firebase";
+import { AuthService } from "../service/firebase";
 
-// Mock firebase.ts
-jest.mock("../service/firebase", () => ({
-  auth: {},
-  registerWithEmailAndPassword: jest.fn().mockImplementation(() =>
-    Promise.resolve({
+// Mock the AuthService class
+jest.mock("../service/firebase", () => {
+  const mockAuthService = {
+    loginWithEmailAndPassword: jest.fn().mockResolvedValue({
       user: {
         uid: "test-uid-123",
         email: "test@example.com",
@@ -18,10 +12,8 @@ jest.mock("../service/firebase", () => ({
       },
       providerId: "password",
       operationType: "signIn",
-    })
-  ),
-  loginWithEmailAndPassword: jest.fn().mockImplementation(() =>
-    Promise.resolve({
+    }),
+    registerWithEmailAndPassword: jest.fn().mockResolvedValue({
       user: {
         uid: "test-uid-123",
         email: "test@example.com",
@@ -29,43 +21,58 @@ jest.mock("../service/firebase", () => ({
       },
       providerId: "password",
       operationType: "signIn",
-    })
-  ),
-  logoutUser: jest.fn().mockResolvedValue(undefined),
-}));
+    }),
+    logoutUser: jest.fn().mockResolvedValue(undefined),
+    getAuth: jest.fn(),
+  };
+
+  return {
+    AuthService: {
+      getInstance: jest.fn().mockReturnValue(mockAuthService),
+    },
+  };
+});
 
 describe("Controller tests:", () => {
   let ctrl: controller;
+  let mockAuthService: any;
 
   beforeAll(() => {
     ctrl = new controller();
+    mockAuthService = AuthService.getInstance();
   });
 
-  describe("registerWithEmailAndPassword", () => {
-    test("should return a Promise with user's data an other things", async () => {
+  describe("register", () => {
+    test("should return a Promise with user's data", async () => {
       const result = await ctrl.register("test@example.com", "psw");
 
-      expect(registerWithEmailAndPassword).toHaveBeenCalled();
+      expect(mockAuthService.registerWithEmailAndPassword).toHaveBeenCalledWith(
+        "test@example.com",
+        "psw"
+      );
       expect(result.user).toHaveProperty("uid", "test-uid-123");
       expect(result.user).toHaveProperty("email", "test@example.com");
     });
   });
 
-  describe("loginWithEmailAndPassword", () => {
-    test("should return a Promise with user's data an other things", async () => {
+  describe("login", () => {
+    test("should return a Promise with user's data", async () => {
       const result = await ctrl.login("test@example.com", "psw");
 
-      expect(loginWithEmailAndPassword).toHaveBeenCalled();
+      expect(mockAuthService.loginWithEmailAndPassword).toHaveBeenCalledWith(
+        "test@example.com",
+        "psw"
+      );
       expect(result.user).toHaveProperty("uid", "test-uid-123");
       expect(result.user).toHaveProperty("email", "test@example.com");
     });
   });
 
-  describe("logoutUser", () => {
-    test("should return a empty Promise", async () => {
+  describe("logout", () => {
+    test("should return an empty Promise", async () => {
       const result = await ctrl.logout();
 
-      expect(logoutUser).toHaveBeenCalled();
+      expect(mockAuthService.logoutUser).toHaveBeenCalled();
       expect(result).toBeUndefined();
     });
   });
