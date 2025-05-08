@@ -6,7 +6,7 @@ const amqpServ = new amqpService();
   try {
     await amqpServ.connect();
     console.log("Connection established !!!\n");
-    amqpServ.save();
+    await amqpServ.save();
   } catch (error: any) {
     console.error("Error: ", error);
   }
