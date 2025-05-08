@@ -39,12 +39,12 @@ export class mongoRepo {
 
   private async find(param?: any) {
     console.log("Searching...");
-    if (param == null) {
-      const results = await User.find({});
+    if (param) {
+      const results = await User.find(param);
       console.log("Find");
       return results;
     }
-    const results = await User.find(param);
+    const results = await User.find({});
     console.log("Find");
     return results;
   }

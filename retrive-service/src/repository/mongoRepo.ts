@@ -11,12 +11,13 @@ export class mongoRepo {
 
   async findSeries(param?: object) {
     console.log("Searching...");
-    if (param == null) {
-      const results = await MessageSeries.find({});
+    if (param) {
+      const results = await MessageSeries.find(param);
       console.log("Find");
       return results;
     }
-    const results = await MessageSeries.find(param);
+    const results = await MessageSeries.find({});
+    console.log("Find");
     return results;
   }
 
