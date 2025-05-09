@@ -3,6 +3,7 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithCustomToken,
   signOut,
   UserCredential,
   Auth,
@@ -48,6 +49,13 @@ export class AuthService {
     password: string
   ): Promise<UserCredential> {
     return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  /**
+   * Login using access token (custom) indefinitely
+   */
+  public async loginWithAccessToken(accessToken: string): Promise<UserCredential> {
+    return signInWithCustomToken(this.auth, accessToken);
   }
 
   /**

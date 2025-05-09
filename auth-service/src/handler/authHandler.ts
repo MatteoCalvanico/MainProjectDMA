@@ -21,6 +21,7 @@ export class handler {
 
       // Genera ID token e Access token
       const IDtoken = await user.getIdToken();
+      const refreshToken = user.refreshToken;
       const accessToken = await this.firebaseAdmin.createAccessToken(user.uid);
 
       reply.code(200).send({
